@@ -40,15 +40,20 @@ main {
 .item-list__info-price {
   font-weight: bold;
 }
-
+/* 글쓰기 버튼 */
 .write-btn {
   position: fixed;
   bottom: 120px;
   right: 20px;
-  background-color: #ef6f0f;
+  background-color: var(--btn-primary);
   color: white;
   padding: 10px 15px;
   border-radius: 25px;
   font-size: 15px;
   box-shadow: rgba(100, 100, 111, 0.3) 5px 5px 11px 0px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.write-btn:hover {
+  background-color: var(--btn-hover);
 }
