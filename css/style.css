@@ -3,6 +3,10 @@
 @import "footer.css";
 @import "main.css";
 
+:root {
+  --btn-primary: rgba(254, 111, 15, 1);
+  --btn-hover: rgba(254, 111, 15, 0.8);
+}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
     "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI",
