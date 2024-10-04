@@ -13,7 +13,7 @@ body {
   display: none;
 }
 .media-info-msg {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,7 +23,8 @@ body {
   align-items: center;
   background-color: salmon;
 }
-@media screen and (max-width: 380px) {
+
+@media screen and (max-width: 500px) {
   .media-info-msg {
     display: none;
   }
