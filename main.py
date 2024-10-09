@@ -50,7 +50,7 @@ async def get_image(item_id):
     image_bytes = cur.execute(f"""
                               SELECT image FROM items WHERE id = {item_id}
                               """).fetchone()[0] #몇 번째 하나만 가져올 때
-    return Response(content=bytes.fromhex(image_bytes))
+    return Response(content=bytes.fromhex(image_bytes), media_type="image/*")
     # 16진법으로 된 것을 바꿔서 컨텐츠로 리스폰스 하겠다
 
 # 아이템 불러오기
@@ -63,9 +63,16 @@ async def get_items():
                        SELECT * FROM items;
                        """).fetchall()
     # fetchall() : 데이터를 가지고오는 문법
-    
+  
     return JSONResponse( jsonable_encoder(dict(row) for row in rows))
 
+  
+    
+# 회원가입
+@app.post("/signup")
+def signup(id:Annotated[str, Form()], password:Annotated[str, Form()]):
+    print(id, password)
+    return '200'
 
 
 
