@@ -31,13 +31,6 @@ const handleSubmit = async (event) => {
     div.innerText = "비밀번호가 일치하지 않습니다.";
     div.style.color = "red";
   }
-
-  try {
-    // const data = await res.json();
-    // if (data === "200") window.location.pathname = "/";
-  } catch (e) {
-    console.error(e);
-  }
 };
 
 form.addEventListener("submit", handleSubmit);
