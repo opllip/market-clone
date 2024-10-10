@@ -1,4 +1,4 @@
-from fastapi import FastAPI,UploadFile,Form, Response
+from fastapi import FastAPI,UploadFile,Form, Response, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -62,7 +62,8 @@ async def get_image(item_id):
 
 # 아이템 불러오기
 @app.get("/items")
-async def get_items():
+async def get_items(user=Depends(manager)):
+    # user=Depends(manager) : 유저가 인증된 상태에서만 응답을 보내주겠다!
     con.row_factory = sqlite3.Row
     #  ㄴ 컬럼명도 같이 가져오는 문법
     cur = con.cursor() #  커넥션의 현재 위치를 커서라고 함. 위치를 업데이트를 해줘야함
@@ -92,12 +93,19 @@ def signup(id:Annotated[str, Form()],
 
 # 로그인 --------------------------------------
 @manager.user_loader()
-def query_user(id):
+def query_user(data):
+    WHERE_STATEMENTS = f'id="{data}"'
+    if type(data) == dict:
+        WHERE_STATEMENTS = f'name="{data['name']}"'
+    print(WHERE_STATEMENTS)
+    # '{WHERE_STATEMENTS}'
     con.row_factory = sqlite3.Row
     cur = con.cursor()
     user = cur.execute(f"""
-                       SELECT * FROM users WHERE id='{id}'
-                       """).fetchone() #하나만 가지고 오기
+                       SELECT * FROM users WHERE {WHERE_STATEMENTS}
+                       """).fetchone() 
+    #fetchone() : 하나만 가지고 오기
+    print(user)
     return user
 
     
@@ -105,7 +113,7 @@ def query_user(id):
 def signup(id:Annotated[str, Form()], 
            password:Annotated[str, Form()]):
     user = query_user(id)
-    
+
     if not user:
         raise InvalidCredentialsException
         # InvalidCredentialsException : 유효하지 않은 계정정보에 대한 에러처리를 할 수있는 문법이 있음
@@ -115,10 +123,13 @@ def signup(id:Annotated[str, Form()],
   
     # 엑세스 토큰 발급하기
     access_token = manager.create_access_token(data={
-        'id': user['id'],
-        'name':user['name'],
-        'email' : user['email']
+        'sub':{
+            'id': user['id'],
+            'name':user['name'],
+            'email' : user['email']
+        }
     })
+    print(access_token)
     return {'access_token': access_token}
 
 
